@@ -43,10 +43,12 @@ namespace Assets.Scripts
         public void Apply(float amount)
         {
             BuildUp += amount;
+            Debug.Log(amount + "amount");
             if (BuildUp > StatusBuildupThreshold)
             {
                 Stage = EventType.Start;
             }
+            Debug.Log(BuildUp);
         }
 
         public void Process()
@@ -89,7 +91,8 @@ namespace Assets.Scripts
 
         public virtual void Exit()
         {
-            Stage = EventType.Exit;
+            
+            Stage = EventType.Inactive;
             BuildUp = 0f;
             ElapsedTime = 0f;
             _particleEffect.Stop();

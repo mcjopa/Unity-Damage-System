@@ -392,6 +392,7 @@ GameObject:
   - component: {fileID: 5602966129768290234}
   - component: {fileID: 3688256847559511804}
   - component: {fileID: 4884164638047635895}
+  - component: {fileID: 2513629011210929173}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -457,6 +458,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Enemy
   _statusManager: {fileID: 5602966129768290234}
+  ApplyFire: 1
+  ApplyPoison: 1
 --- !u!114 &4884164638047635895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +476,27 @@ MonoBehaviour:
   regenDelay: 2
   regenRate: 0.2
   regenAmountPerSecond: 500
+--- !u!65 &2513629011210929173
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9058893973572019771}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1033225593059483034
 PrefabInstance:
   m_ObjectHideFlags: 0

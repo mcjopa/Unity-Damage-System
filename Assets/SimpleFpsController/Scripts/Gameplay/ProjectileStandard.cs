@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts;
 using Unity.FPS.Game;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Unity.FPS.Gameplay
 {
     public class ProjectileStandard : ProjectileBase
     {
-        [Header("General")] [Tooltip("Radius of this projectile's collision detection")]
+        [Header("General")]
+        [Tooltip("Radius of this projectile's collision detection")]
         public float Radius = 0.01f;
 
         [Tooltip("Transform representing the root of the projectile (used for accurate collision detection)")]
@@ -27,13 +30,14 @@ namespace Unity.FPS.Gameplay
         [Tooltip("Offset along the hit normal where the VFX will be spawned")]
         public float ImpactVfxSpawnOffset = 0.1f;
 
-        [Tooltip("Clip to play on impact")] 
+        [Tooltip("Clip to play on impact")]
         public AudioClip ImpactSfxClip;
 
         [Tooltip("Layers this projectile can collide with")]
         public LayerMask HittableLayers = -1;
 
-        [Header("Movement")] [Tooltip("Speed of the projectile")]
+        [Header("Movement")]
+        [Tooltip("Speed of the projectile")]
         public float Speed = 20f;
 
         [Tooltip("Downward acceleration from gravity")]
@@ -46,10 +50,18 @@ namespace Unity.FPS.Gameplay
         [Tooltip("Determines if the projectile inherits the velocity that the weapon's muzzle had when firing")]
         public bool InheritWeaponVelocity = false;
 
-        [Header("Damage")] [Tooltip("Damage of the projectile")]
+        [Header("Damage")]
+        [Tooltip("Damage of the projectile")]
         public float Damage = 40f;
 
-        [Header("Debug")] [Tooltip("Color of the projectile radius debug view")]
+        [Header("Status Effect")]
+        [SerializeField]
+        public bool AppliesStatus;
+        public StatusEffect.StatusType statusType;
+        public float statusAmount;
+
+        [Header("Debug")]
+        [Tooltip("Color of the projectile radius debug view")]
         public Color RadiusColor = Color.cyan * 0.2f;
 
         ProjectileBase m_ProjectileBase;
@@ -194,12 +206,11 @@ namespace Unity.FPS.Gameplay
 
         bool IsHitValid(RaycastHit hit)
         {
-            return true;
-            // // ignore hits with an ignore component
-            // if (hit.collider.GetComponent<IgnoreHitDetection>())
-            // {
-            //     return false;
-            // }
+            // ignore hits with an ignore component
+            if (hit.collider.GetComponent<IgnoreHitDetection>())
+            {
+                return false;
+            }
 
             // // ignore hits with triggers that don't have a Damageable component
             // if (hit.collider.isTrigger && hit.collider.GetComponent<Damageable>() == null)
@@ -207,33 +218,29 @@ namespace Unity.FPS.Gameplay
             //     return false;
             // }
 
-            // // ignore hits with specific ignored colliders (self colliders, by default)
-            // if (m_IgnoredColliders != null && m_IgnoredColliders.Contains(hit.collider))
-            // {
-            //     return false;
-            // }
+            // ignore hits with specific ignored colliders (self colliders, by default)
+            if (m_IgnoredColliders != null && m_IgnoredColliders.Contains(hit.collider))
+            {
+                return false;
+            }
 
-            // return true;
+            return true;
         }
 
         void OnHit(Vector3 point, Vector3 normal, Collider collider)
         {
-            // damage
-            // if (AreaOfDamage)
-            // {
-            //     // area damage
-            //     AreaOfDamage.InflictDamageInArea(Damage, point, HittableLayers, k_TriggerInteraction,
-            //         m_ProjectileBase.Owner);
-            // }
-            // else
-            // {
-            //     // point damage
-            //     Damageable damageable = collider.GetComponent<Damageable>();
-            //     if (damageable)
-            //     {
-            //         damageable.InflictDamage(Damage, false, m_ProjectileBase.Owner);
-            //     }
-            // }
+            Debug.Log($"Hit: ${collider.gameObject.name}");
+            if (collider.gameObject.GetComponentInParent<Enemy>() is Enemy enemy)
+            {
+                Debug.Log("Hit Enemy");
+
+                enemy.DamageEnemy(new BasicDamage(Damage));
+                if (AppliesStatus)
+                {
+                    enemy.ApplyStatus(new SimpleStatusApplicator(statusType, statusAmount));
+                }
+                // statsenemy.ApplyStatus
+            }
 
             // impact vfx
             if (ImpactVfx)

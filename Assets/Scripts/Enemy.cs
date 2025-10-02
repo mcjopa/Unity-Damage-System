@@ -33,8 +33,12 @@ namespace Assets.Scripts
             _health.EntityDied += () => Debug.Log("Entity Is Dead");
             _health.EntityDied += Kill;
 
-            StartCoroutine(ApplyRandomEffect());
-            _health.EntityFullHealed += () => StartCoroutine(ApplyRandomEffect());
+
+            if (ApplyFire || ApplyPoison)
+            {
+                StartCoroutine(ApplyRandomEffect());
+                _health.EntityFullHealed += () => StartCoroutine(ApplyRandomEffect());
+            }
 
             // simple logic for showcase
             effects = new List<SimpleStatusApplicator>();
@@ -59,10 +63,9 @@ namespace Assets.Scripts
             // Debug.Log($"Health Changed: {args.Prev} {args.Cur}");
         }
 
-        void DamageEnemy()
+        public void DamageEnemy(Damage damage)
         {
-            Damage damage = new DiscreteDamage(10);
-            _damageHandler.ApplyDamage(damage, _health);
+            damage.Apply(_health);
         }
 
 
